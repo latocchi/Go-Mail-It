@@ -1,6 +1,5 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -10,6 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// TODO: Setup email credentials
+// TODO: Get email body from txt file
+// TODO: Save credentials in keyring
+// TODO: Get credentials in keyring
 
 
 // rootCmd represents the base command when called without any subcommands
@@ -47,5 +50,3 @@ func init() {
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
-
-
