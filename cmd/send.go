@@ -1,13 +1,21 @@
 /*
 Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/latocchi/Go-Mail-It/internal/utils"
 	"github.com/spf13/cobra"
+)
+
+var (
+	to      string
+	from    string
+	body    string
+	subject string
 )
 
 // sendCmd represents the send command
@@ -21,7 +29,36 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("send called")
+		fmt.Println("Sending email...")
+
+		/**
+			Algorithm to check if the user input is File or string literal
+
+			user input
+			checks if string or path or file
+
+			if check first if path or file
+				read file
+				send as string
+
+			if string
+				send as string
+			else
+				send as string
+		**/
+
+		if utils.IsFile(body) {
+			data, err := os.ReadFile(body)
+			if err != nil {
+				panic(err)
+			}
+			body = string(data)
+		}
+
+		fmt.Printf("From: %s\n", from)
+		fmt.Printf("To: %s\n", to)
+		fmt.Printf("Subject: %s\n", subject)
+		fmt.Printf("Body: %s\n", body)
 	},
 }
 
@@ -37,4 +74,16 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// sendCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	sendCmd.Flags().StringVarP(&to, "to", "t", "", "Recipient of the email")
+	sendCmd.Flags().StringVarP(&from, "from", "f", "", "Sender of the email")
+	sendCmd.Flags().StringVarP(&body, "body", "b", "No body", "Body of the email, can be '-' for stdin or a .txt file path")
+	sendCmd.Flags().StringVarP(&subject, "subject", "s", "No subject", "Subject of the email")
+
+	if err := sendCmd.MarkFlagRequired("to"); err != nil {
+		panic(err)
+	}
+
+	if err := sendCmd.MarkFlagRequired("from"); err != nil {
+		panic(err)
+	}
 }
