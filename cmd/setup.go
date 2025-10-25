@@ -4,14 +4,10 @@ Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
 
-	"github.com/latocchi/Go-Mail-It/internal/keyring"
+	"github.com/latocchi/Go-Mail-It/internal/providers"
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 )
 
 var provider string
@@ -21,23 +17,17 @@ var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "Setup email provider to use",
 	Run: func(cmd *cobra.Command, args []string) {
-		var email, password string
-
-		reader := bufio.NewReader(os.Stdin)
-
-		fmt.Print("Your email: ")
-		email, _ = reader.ReadString('\n')
-		email = strings.TrimSpace(email)
-
-		fmt.Print("Your password/app password: ")
-		bytePassword, _ := term.ReadPassword(int(os.Stdin.Fd()))
-		password = strings.TrimSpace(string(bytePassword))
-
-		if err := keyring.SaveCredentials(email, password); err != nil {
-			panic(err)
+		provider = args[0]
+		switch provider {
+		case "google", "gmail":
+			_, err := providers.SetupGoogle()
+			if err != nil {
+				fmt.Println("Error setting up Google provider:", err)
+			}
+		default:
+			fmt.Println("Unsupported provider:", provider)
+			// TODO: Change default so that the program exits with error code
 		}
-
-		fmt.Println("\nCredentials saved successfully!")
 	},
 }
 
@@ -53,8 +43,5 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// setupCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	setupCmd.Flags().StringVarP(&provider, "provider", "p", "", "Email provider to use (e.g., 'google')")
-	if err := setupCmd.MarkFlagRequired("provider"); err != nil {
-		panic(err)
-	}
+
 }

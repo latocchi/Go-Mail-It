@@ -10,7 +10,6 @@ import (
 )
 
 // TODO: Setup email credentials
-// TODO: Get email body from txt file
 // TODO: Save credentials in keyring
 // TODO: Get credentials in keyring
 
