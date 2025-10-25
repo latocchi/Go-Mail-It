@@ -15,7 +15,7 @@ var provider string
 // setupCmd represents the setup command
 var setupCmd = &cobra.Command{
 	Use:   "setup",
-	Short: "Setup email provider to use",
+	Short: "Setup email provider to use (Only google/gmail is supported for now)",
 	Run: func(cmd *cobra.Command, args []string) {
 		provider = args[0]
 		switch provider {
